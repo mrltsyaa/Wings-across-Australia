@@ -1,11 +1,15 @@
 
 var vg_1 = "charts/chart1.vg.json";
 
-vegaEmbed("#chart1", vg_1)
-    .then(function(result) {
-        console.log("Chart 1 loaded");
+vegaEmbed("#chart1", vg_1, {
+    loader: vega.loader({
+        baseURL: new URL("charts/", window.location.href).href
     })
-    .catch(console.error);
+})
+.then(function(result) {
+    console.log("Chart 1 loaded");
+})
+.catch(console.error);
 
 var vg_2 = "charts/chart2.vg.json";
 
