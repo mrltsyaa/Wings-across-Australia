@@ -1,0 +1,120 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": {
+        "text" : "Which Shorebirds Appear Most in Each Season?",
+        "subtitle" : "Summer has more records for most top species.",
+        "anchor" : "start",
+        "font": "Georgia",
+        "subtitleFont" : "Arial",
+        "fontSize": 18,
+        "subtitleFontSize": 12,
+        "subtitleColor":"#666666"
+    
+    },
+
+    "data": {
+        "url" :"../data/birdlife.csv"
+    },
+    "transform": [
+        {
+            "filter": "datum.Species !== 'Shorebird aggregation' && datum.Species !== 'Species diversity'"
+
+        },
+        {
+            "joinaggregate": [
+                {
+                    "op": "count",
+                    "as": "TotalRecords"
+                }
+            ],
+            "groupby": ["Species"]
+        },
+        {
+            "window": [
+                {
+                    "op": "dense_rank",
+                    "as": "Rank"
+                }
+            ],
+            "sort": [
+                {
+                    "field": "TotalRecords",
+                    "order": "descending"
+                }
+            ]
+        },
+        {
+            "filter": "datum.Rank <=10"
+        },
+        {
+            "aggregate": [
+                {
+                    "op": "count",
+                    "as" : "Records"
+                }
+            ],
+            "groupby": ["Species", "Season","TotalRecords"]
+        }
+    ],
+    "mark": {
+        "type": "rect"
+    },
+    "encoding": {
+        "x": {
+            "field": "Season",
+            "type" : "nominal",
+            "title": "Season",
+            "sort" : ["Summer","Winter"],
+            "axis" :{
+                "labelAngle":0
+            }
+        },
+        "y":{
+            "field": "Species",
+            "type" : "nominal",
+            "title" : "Shorebird Species",
+            "sort":{
+                "field": "TotalRecords",
+                "order" : "descending"
+            }
+        },
+        "color":{
+            "field": "Records",
+            "type" : "quantitative",
+            "title": "Number of Records",
+            "scale": {
+                "scheme": "blues"
+            }
+        },
+        "tooltip": [
+            {
+                "field": "Species",
+                "type" : "nominal"
+            },
+            {
+                "field": "Season",
+                "type" : "nominal"
+            },
+            {
+                "field": "Records",
+                "type": "quantitative",
+                "title": "Number of Records"
+            }
+        ]
+    },
+    "width": 450,
+    "height": 350,
+
+    "config":{
+        "axis": {
+            "labelFont": "Arial",
+            "titleFont": "Arial"
+        },
+        "legend":{
+            "labelFont": "Arial",
+            "titleFont": "Arial"
+        }
+    }
+
+
+}

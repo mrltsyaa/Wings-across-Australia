@@ -1,0 +1,172 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": {
+        "text" : "Where Are Australia's Shorebird Hotspots?",
+        "subtitle" : "Eighty Mile Beach leads with a peak of 520,000.",
+        "font": "Georgia",
+        "subtitleFont" : "Arial",
+        "fontSize": 18,
+        "subtitleFontSize": 12,
+        "subtitleColor":"#797979",
+        "anchor" : "start"
+    },
+    "data": {
+        "url": "../data/birdlife.csv"
+    },
+    "transform": [
+        {
+            "filter": "isValid(datum.peak_sort) && isFinite(toNumber(datum.peak_sort))&& toNumber(datum.peak_sort)>0"
+        },
+        {
+            "calculate": "toNumber(datum.peak_sort)",
+            "as": "PeakCount"
+        },
+        {
+            "aggregate":[
+                {
+                    "op": "max",
+                    "field": "PeakCount",
+                    "as": "MaxPeak"
+                }
+            ],
+            "groupby": ["SBA"]
+        },
+        {
+            "window": [
+                {
+                    "op": "row_number",
+                    "as" : "Rank"
+                }
+            ],
+            "sort":[
+                {
+                    "field": "MaxPeak",
+                    "order" : "descending"
+                },
+                {
+                    "field": "SBA",
+                    "order": "ascending"
+                }
+            ]
+        },
+        {
+            "filter": "datum.Rank <=10"
+        }
+    ],
+    "layer": [
+        {
+            "mark":{
+                "type": "rule",
+                "strokeWidth": 2,
+                "color":"#35c3c1"
+            },
+            "encoding":{
+                "x":{
+                    "field": "MaxPeak",
+                    "type" : "quantitative",
+                    "title" : "Highest Reported Peak Count",
+                    "scale" : {
+                        "zero":true
+                    },
+                    "axis": {
+                        "format": ",d"
+                    }
+                },
+                "x2":{
+                    "datum": 0
+                },
+                "y": {
+                    "field": "SBA",
+                    "type" : "nominal",
+                    "sort": {
+                        "field": "MaxPeak",
+                        "order": "descending"
+                    },
+                    "title": null
+                }
+            }
+        },
+        {
+            "mark":{
+                "type": "point",
+                "filled": true,
+                "size": 110,
+                "color": "#35c3c1"
+            },
+            "encoding":{
+                "x":{
+                    "field": "MaxPeak",
+                    "type": "quantitative"
+                },
+                "y":{
+                    "field":"SBA",
+                    "type": "nominal",
+                    "sort":{
+                        "field":"MaxPeak",
+                        "order": "descending"
+                    }
+                },
+                "tooltip":[
+                    {
+                        "field": "SBA",
+                        "type" : "nominal",
+                        "title" : "Shorebird Area"
+    
+                    },
+                    {
+                        "field": "MaxPeak",
+                        "type": "quantitative",
+                        "title": "Highest Reported Peak",
+                        "format": ",d"
+                    }
+                ]
+            }
+        },
+        {
+            "mark":{
+                "type": "text",
+                "align": "left",
+                "baseline": "middle",
+                "dx": 10,
+                "font": "Arial",
+                "fontSize": 11,
+                "color": "#333333"
+            },
+            "encoding":{
+                "x":{
+                    "field": "MaxPeak",
+                    "type": "quantitative"
+                },
+                "y":{
+                    "field": "SBA",
+                    "type": "nominal",
+                    "sort": {
+                        "field":"MaxPeak",
+                        "order": "descending"
+                    }
+                },
+                "text": {
+                    "field": "MaxPeak",
+                    "type": "quantitative",
+                    "format": ",.0f"
+
+                }
+            }
+        }
+    ],
+    "width": 550,
+    "height": 380,
+    "padding":{
+        "left": 5,
+        "top" : 5,
+        "right": 85,
+        "bottom": 5  
+    },
+    "config":{
+        "axis":{
+            "labelFont":"Arial",
+            "titleFont":"Arial",
+            "labelFontSize": 11
+        }
+    }
+}

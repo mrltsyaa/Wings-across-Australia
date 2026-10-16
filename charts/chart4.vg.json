@@ -1,0 +1,85 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": {
+        "text" : "How Have Shorebird Records Changed?",
+        "subtitle" : "The records fluctuate with notable decline in 2024.",
+        "font": "Georgia",
+        "subtitleFont" : "Arial",
+        "fontSize": 18,
+        "subtitleFontSize": 12,
+        "subtitleColor":"#666666",
+        "anchor" : "start"
+    },
+
+    "data": {
+        "url" :"../data/birdlife.csv"
+    },
+    "transform": [
+        {
+            "filter": "isValid(datum.Year) && datum.Year != null"
+        },
+        {
+            "aggregate": [
+                {
+                    "op":"count",
+                    "as": "Records"
+                }
+            ],
+            "groupby": ["Year"]
+        }
+    ],
+    "mark": {
+        "type": "line",
+        "strokeWidth": 3,
+        "color": "#69977e",
+        "point": {
+            "filled": true,
+            "fill" :"#69977e",
+            "size" : 65
+        }
+       
+    },
+    "encoding":{
+        "x":{
+            "field": "Year",
+            "type" : "ordinal",
+            "title": "Year",
+            "sort" :"ascending",
+            "axis" : {
+                "labelAngle": 0
+            }
+        },
+        "y": {
+            "field" : "Records",
+            "type"  : "quantitative",
+            "title" : "Number of Directory Records",
+            "scale" : {
+                "zero": true
+            }
+        },
+        "tooltip": [
+            {
+                "field": "Year",
+                "type" : "ordinal",
+                "title" : "Year"
+            },
+            {
+                "field" : "Records",
+                "type"  : "quantitative",
+                "title" : "Number of Records"
+            }
+        ]
+    },
+    "width"  : 500,
+    "height" : 300,
+    "config" : {
+        "axis": {
+            "labelFont": "Arial",
+            "titleFont": "Arial"
+        },
+        "legend": {
+            "labelFont": "Arial",
+            "titleFont": "Arial"
+        }
+    }
+}
