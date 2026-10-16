@@ -12,7 +12,7 @@
       "anchor": "start"
     },
     "data": {
-      "url": "../data/Ramsar_Wetlands.csv"
+      "url": "data/Ramsar_Wetlands.csv"
     },
     "transform": [
       {

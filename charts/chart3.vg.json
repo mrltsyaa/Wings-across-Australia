@@ -13,7 +13,7 @@
     },
 
     "data": {
-        "url" :"../data/birdlife.csv"
+        "url" :"data/birdlife.csv"
     },
     "transform": [
         {

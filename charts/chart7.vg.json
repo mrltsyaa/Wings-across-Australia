@@ -12,7 +12,7 @@
     "anchor": "start"
   },
   "data": {
-    "url": "../data/australia_states.geojson",
+    "url": "data/australia_states.geojson",
     "format": {
       "type": "json",
       "property": "features"
