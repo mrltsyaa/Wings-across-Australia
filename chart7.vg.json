@@ -1,0 +1,79 @@
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Where Are Australia's Ramsar Wetlands Concentrated?",
+    "subtitle": "New South Wales, Victoria and Western Australia lead in Ramsar sites.",
+    "font": "Georgia",
+    "fontSize": 18,
+    "subtitleFont": "Arial",
+    "subtitleFontSize": 12,
+    "subtitleColor": "#666666",
+    "anchor": "start"
+  },
+  "data": {
+    "url": "../data/australia_states.geojson",
+    "format": {
+      "type": "json",
+      "property": "features"
+    }
+  },
+  "transform": [
+    {
+      "calculate": "datum.properties.STATE_NAME",
+      "as": "StateName"
+    },
+    {
+      "calculate": "datum.StateName === 'New South Wales' ? 13 : datum.StateName === 'Victoria' ? 12 : datum.StateName === 'Western Australia' ? 12 : datum.StateName === 'Tasmania' ? 10 : datum.StateName === 'South Australia' ? 6 : datum.StateName === 'Queensland' ? 5 : datum.StateName === 'Northern Territory' ? 2 : datum.StateName === 'Australian Capital Territory' ? 1 : null",
+      "as": "RamsarCount"
+    }
+  ],
+  "mark": {
+    "type": "geoshape",
+    "stroke": "#ffffff",
+    "strokeWidth": 1
+  },
+  "encoding": {
+    "color": {
+      "field": "RamsarCount",
+      "type": "quantitative",
+      "title": "Number of Ramsar Sites",
+      "scale": {
+        "scheme": "greens",
+        "domain": [0, 13]
+      },
+      "legend": {
+        "orient": "right",
+        "titleFont": "Arial",
+        "labelFont": "Arial"
+      }
+    },
+    "tooltip": [
+      {
+        "field": "StateName",
+        "type": "nominal",
+        "title": "State or Territory"
+      },
+      {
+        "field": "RamsarCount",
+        "type": "quantitative",
+        "title": "Ramsar Sites",
+        "format": ".0f"
+      }
+    ]
+  },
+  "projection": {
+    "type": "mercator",
+    "center": [134, -25],
+    "scale": 450,
+    "translate": [275, 200]
+  },
+  "width": 550,
+  "height": 400,
+  "config": {
+    "legend": {
+      "labelFont": "Arial",
+      "titleFont": "Arial"
+    }
+  }
+}

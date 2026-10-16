@@ -1,0 +1,123 @@
+
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": {
+      "text": "Which State Have the Most Ramsar Wetlands?",
+      "subtitle": "New South Wales with 13 internationally recognised ramsar wetland sites .",
+      "font": "Georgia",
+      "fontSize": 18,
+      "subtitleFont": "Arial",
+      "subtitleFontSize": 12,
+      "subtitleColor": "#666666",
+      "anchor": "start"
+    },
+    "data": {
+      "url": "../data/Ramsar_Wetlands.csv"
+    },
+    "transform": [
+      {
+        "filter": "isValid(datum.RAMSAR_NAME) && isValid(datum.STATE) && datum.RAMSAR_NAME !== '' && datum.STATE !== ''"
+      },
+      {
+        "aggregate": [
+          {
+            "op": "count",
+            "as": "Rows"
+          }
+        ],
+        "groupby": [
+          "STATE",
+          "RAMSAR_NAME"
+        ]
+      },
+      {
+        "aggregate": [
+          {
+            "op": "count",
+            "as": "Sites"
+          }
+        ],
+        "groupby": [
+          "STATE"
+        ]
+      },
+      {
+        "calculate": "datum.STATE === 'EXT' ? 'External Territories' : datum.STATE",
+      "as": "StateLabel"
+      }
+    ],
+    
+"layer": [
+    {
+        "mark": {
+            "type": "circle",
+            "size": 180,
+            "color": "#4eaf98",
+            "opacity": 0.9
+        }
+    },
+    {
+        "mark": {
+            "type": "text",
+            "align": "left",
+            "baseline": "middle",
+            "dx": 12,
+            "font": "Arial",
+            "fontSize": 12,
+            "color": "#333333"
+        },
+        "encoding": {
+            "text": {
+                "field": "Sites",
+                "type": "quantitative",
+                "format": ".0f"
+            }
+        }
+    }
+],
+
+    "encoding": {
+      "x": {
+        "field": "Sites",
+        "type": "quantitative",
+        "title": "Number of Ramsar Sites",
+        "scale": {
+          "zero": true
+        },
+        "axis": {
+          "tickMinStep": 1
+        }
+      },
+      "y": {
+        "field": "StateLabel",
+        "type": "nominal",
+        "title": null,
+        "sort": {
+          "field": "Sites",
+          "order": "descending"
+        }
+      },
+      "tooltip": [
+        {
+          "field": "STATE",
+          "type": "nominal",
+          "title": "State or Territory"
+        },
+        {
+          "field": "Sites",
+          "type": "quantitative",
+          "title": "Number of Ramsar Sites"
+        }
+      ]
+    },
+    "width": 480,
+    "height": 300,
+    "config": {
+      "axis": {
+        "labelFont": "Arial",
+        "titleFont": "Arial",
+        "labelFontSize": 12
+      }
+    }
+  }
+  

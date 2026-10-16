@@ -1,0 +1,136 @@
+
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": {
+      "text": "Do More Diverse Shorebird Areas Have Higher Bird Counts?",
+      "subtitle": "More species often coincide with higher peak counts, with one area exceeding 500,000 birds.",
+      "font": "Georgia",
+      "fontSize": 18,
+      "subtitleFont": "Arial",
+      "subtitleFontSize": 12,
+      "subtitleColor": "#666666",
+      "anchor": "start"
+    },
+    "data": {
+      "url": "../data/birdlife.csv"
+    },
+    "transform": [
+      {
+        "filter": "isValid(datum.SBA) && isValid(datum.Species) && datum.Species !== 'Species diversity' && datum.Species !== 'Shorebird aggregation'"
+      },
+      {
+        "calculate": "toNumber(datum.peak_sort)",
+        "as": "PeakCount"
+      },
+      {
+        "aggregate": [
+          {
+            "op": "distinct",
+            "field": "Species",
+            "as": "SpeciesCount"
+          },
+          {
+            "op": "max",
+            "field": "PeakCount",
+            "as": "MaxPeak"
+          },
+          {
+            "op": "count",
+            "as": "RecordCount"
+          }
+        ],
+        "groupby": ["SBA"]
+      },
+      {
+        "filter": "isValid(datum.MaxPeak) && datum.MaxPeak >= 0"
+      }
+    ],
+    "mark": {
+      "type": "circle",
+      "opacity": 0.4,
+      "color": "#35c3c1",
+      "stroke": "#238f8d",
+      "strokeWidth": 0.7
+    },
+    "encoding": {
+      "x": {
+        "field": "SpeciesCount",
+        "type": "quantitative",
+        "title": "Number of Distinct Species",
+        "scale": {
+          "zero": true
+        },
+        "axis": {
+          "tickMinStep": 1,
+          "labelFont": "Arial",
+          "titleFont": "Arial",
+          "grid": true,
+          "gridColor": "#eeeeee",
+          "gridOpacity": 0.5
+        }
+      },
+      "y": {
+        "field": "MaxPeak",
+        "type": "quantitative",
+        "title": "Maximum Reported Bird Count (Symlog Scale)",
+        "scale": {
+          "type": "symlog"
+        },
+        "axis": {
+          "format": "~s",
+          "tickCount": 5,
+          "labelFont": "Arial",
+          "titleFont": "Arial",
+          "grid": true,
+          "gridColor": "#eeeeee",
+          "gridOpacity": 0.5
+        }
+      },
+      "size": {
+        "field": "RecordCount",
+        "type": "quantitative",
+        "title": "Directory Records",
+        "scale": {
+          "range": [25, 700]
+        },
+        "legend": {
+          "titleFont": "Arial",
+          "labelFont": "Arial",
+          "orient": "right"
+        }
+      },
+      "tooltip": [
+        {
+          "field": "SBA",
+          "type": "nominal",
+          "title": "Shorebird Area"
+        },
+        {
+          "field": "SpeciesCount",
+          "type": "quantitative",
+          "title": "Distinct Species",
+          "format": ".0f"
+        },
+        {
+          "field": "MaxPeak",
+          "type": "quantitative",
+          "title": "Maximum Peak Count",
+          "format": ",.0f"
+        },
+        {
+          "field": "RecordCount",
+          "type": "quantitative",
+          "title": "Directory Records",
+          "format": ".0f"
+        }
+      ]
+    },
+    "width": 540,
+    "height": 360,
+    "config": {
+      "view": {
+        "stroke": null
+      }
+    }
+  }
+  
