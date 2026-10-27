@@ -22,7 +22,7 @@
     "layer": [
       {
         "data": {
-          "url": "../data/australia_states.geojson",
+          "url": "data/australia_states.geojson",
           "format": {
             "type": "json",
             "property": "features"
@@ -37,7 +37,7 @@
       },
       {
         "data": {
-          "url": "../data/ramsar_site_points.csv"
+          "url": "data/ramsar_site_points.csv"
         },
         "transform": [
           {
