@@ -2,7 +2,6 @@
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "title": {
         "text" : "How Have Shorebird Records Changed?",
-        "subtitle" : "The records fluctuate with notable decline in 2024.",
         "font": "Georgia",
         "subtitleFont" : "Arial",
         "fontSize": 18,

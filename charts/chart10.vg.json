@@ -1,16 +1,7 @@
 
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": {
-    "text": "Where Are Ramsar Wetlands Most Concentrated?",
-    "subtitle": "Explore geographic concentrations of Ramsar sites across Australia.",
-    "font": "Georgia",
-    "fontSize": 18,
-    "subtitleFont": "Arial",
-    "subtitleFontSize": 12,
-    "subtitleColor": "#666666",
-    "anchor": "start"
-  },
+  
   "width": 550,
   "height": 420,
   "projection": {
@@ -50,34 +41,84 @@
         },
         {
           "filter": "isValid(datum.Lat) && isValid(datum.Lon) && datum.Lat >= -45 && datum.Lat <= -9 && datum.Lon >= 112 && datum.Lon <= 155"
+        },
+        {
+          "calculate": "floor(datum.Lon / 3) * 3",
+          "as": "GridLon"
+        },
+        {
+          "calculate": "floor(datum.Lat / 3) * 3",
+          "as": "GridLat"
+        },
+        {
+          "aggregate": [
+            {
+              "op": "count",
+              "as": "SiteCount"
+            }
+          ],
+          "groupby": [
+            "GridLon",
+            "GridLat"
+          ]
+        },
+        {
+          "calculate": "datum.GridLon + 3",
+          "as": "GridLonEnd"
+        },
+        {
+          "calculate": "datum.GridLat + 3",
+          "as": "GridLatEnd"
         }
       ],
       "mark": {
-        "type": "circle",
-        "size": 5500,
-        "color": "#E76F2E",
-        "opacity": 0.10,
-        "stroke": null
+        "type": "rect",
+        "opacity": 0.85,
+        "stroke": "#FFFFFF",
+        "strokeWidth": 0.7
       },
       "encoding": {
         "longitude": {
-          "field": "Lon",
+          "field": "GridLon",
           "type": "quantitative"
         },
+        "longitude2": {
+          "field": "GridLonEnd"
+        },
         "latitude": {
-          "field": "Lat",
+          "field": "GridLat",
           "type": "quantitative"
+        },
+        "latitude2": {
+          "field": "GridLatEnd"
+        },
+        "color": {
+          "field": "SiteCount",
+          "type": "quantitative",
+          "title": "Ramsar sites",
+          "scale": {
+            "scheme":"blues"
+          },
+          "legend": {
+            "orient": "bottom",
+            "gradientLength": 180
+          }
         },
         "tooltip": [
           {
-            "field": "RAMSAR_NAME",
-            "type": "nominal",
-            "title": "Ramsar Site"
+            "field": "SiteCount",
+            "type": "quantitative",
+            "title": "Number of Ramsar Sites"
           },
           {
-            "field": "STATE",
-            "type": "nominal",
-            "title": "State"
+            "field": "GridLon",
+            "type": "quantitative",
+            "title": "Grid Longitude"
+          },
+          {
+            "field": "GridLat",
+            "type": "quantitative",
+            "title": "Grid Latitude"
           }
         ]
       }

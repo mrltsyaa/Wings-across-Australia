@@ -1,16 +1,7 @@
 
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "title": {
-      "text": "Do More Diverse Shorebird Areas Have Higher Bird Counts?",
-      "subtitle": "More species often coincide with higher peak counts, with one area exceeding 500,000 birds.",
-      "font": "Georgia",
-      "fontSize": 18,
-      "subtitleFont": "Arial",
-      "subtitleFontSize": 12,
-      "subtitleColor": "#666666",
-      "anchor": "start"
-    },
+    
     "data": {
       "url": "data/birdlife.csv"
     },

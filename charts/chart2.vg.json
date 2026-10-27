@@ -1,18 +1,7 @@
 
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "title":{
-      "text": "Which Season Has More Shorebird Records?",
-      "subtitle": "Summer accounts for most directory records.",
-      "font": "Georgia",
-      "fontSize": 18,
-      "subtitleFont": "Arial",
-      "subtitleFontSize": 12,
-      "subtitleColor": "#252525",
-      "anchor": "start"
-  },
     
-   
     "data": {
       "url": "data/birdlife.csv"
     },

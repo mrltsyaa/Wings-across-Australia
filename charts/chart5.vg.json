@@ -1,15 +1,6 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "title": {
-        "text" : "Where Are Australia's Shorebird Hotspots?",
-        "subtitle" : "Eighty Mile Beach leads with a peak of 520,000.",
-        "font": "Georgia",
-        "subtitleFont" : "Arial",
-        "fontSize": 18,
-        "subtitleFontSize": 12,
-        "subtitleColor":"#797979",
-        "anchor" : "start"
-    },
+    
     "data": {
         "url": "data/birdlife.csv"
     },

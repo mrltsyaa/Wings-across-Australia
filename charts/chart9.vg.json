@@ -1,16 +1,7 @@
 
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "title": {
-      "text": "Where Are Australia's Ramsar Wetlands Located?",
-      "subtitle": "Each orange dot represents a Ramsar site. Hover to explore.",
-      "font": "Georgia",
-      "fontSize": 18,
-      "subtitleFont": "Arial",
-      "subtitleFontSize": 12,
-      "subtitleColor": "#666666",
-      "anchor": "start"
-    },
+    
     "width": 550,
     "height": 420,
     "projection": {
@@ -49,7 +40,7 @@
         ],
         "mark": {
           "type": "circle",
-          "color": "#C46D45",
+          "color": "#2e5dae",
           "size": 100,
           "opacity": 0.85,
           "stroke": "#FFFFFF",

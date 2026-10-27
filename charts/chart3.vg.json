@@ -1,16 +1,5 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "title": {
-        "text" : "Which Shorebirds Appear Most in Each Season?",
-        "subtitle" : "Summer has more records for most top species.",
-        "anchor" : "start",
-        "font": "Georgia",
-        "subtitleFont" : "Arial",
-        "fontSize": 18,
-        "subtitleFontSize": 12,
-        "subtitleColor":"#666666"
-    
-    },
 
     "data": {
         "url" :"data/birdlife.csv"

@@ -1,16 +1,7 @@
 
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": {
-    "text": "Where Are Australia's Ramsar Wetlands Concentrated?",
-    "subtitle": "New South Wales, Victoria and Western Australia lead in Ramsar sites.",
-    "font": "Georgia",
-    "fontSize": 18,
-    "subtitleFont": "Arial",
-    "subtitleFontSize": 12,
-    "subtitleColor": "#666666",
-    "anchor": "start"
-  },
+
   "data": {
     "url": "data/australia_states.geojson",
     "format": {

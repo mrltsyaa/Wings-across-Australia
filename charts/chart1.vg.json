@@ -2,17 +2,6 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   
-    "title":{
-        "text":  "Top 10 Most Frequently Listed Shorebird Species",
-        "subtitle": "Sharp-tailed Sandpiper leads with 141 directory records.",
-        "font": "Georgia",
-        "fontSize": 18,
-        "subtitleFont": "Arial",
-        "subtitleFontSize": 12,
-        "subtitleColor": "#666666",
-        "anchor": "start"
-    },
-  
     "data": {
       "url": "https://mrltsyaa.github.io/Wings-across-Australia/data/birdlife.csv"
     },

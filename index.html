@@ -2,117 +2,664 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
+  <title>Wings Across Australia | Shorebird Data Story</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+  <style>
+    :root {
+      --background: #EAF1EA;
+      --white: #FFFFFF;
+      --dark-green: #254D42;
+      --text: #263B35;
+      --muted: #61756A;
+      --border: #DDE7DE;
+      --accent: #C97D4D;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      background-color:#EAF1EA;
-      color: #263B35;
-      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 30px 50px;
-    }
-    .annotation {
-  font-family: Arial, sans-serif;
-  font-size: 13px;
-  color: #526B5E;
-  font-style: italic;
-  margin-top: 8px;
-  margin-bottom: 30px;
-  max-width: 550px;
-  line-height: 1.6;
-}
-  
-    h1, h2 {
-      font-family: Georgia, serif;
-      color: #254D42;
-    }
-  
-    p {
+      background: var(--background);
+      color: var(--text);
+      font-family: Arial, sans-serif;
       line-height: 1.7;
     }
+
+    /* HEADER */
+
+    .hero {
+      background: var(--dark-green);
+      color: white;
+      padding: 75px 30px;
+      text-align: center;
+    }
+
+    .hero-label {
+      color: #C6D9CD;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .hero h1 {
+      font-family: Georgia, serif;
+      font-size: clamp(36px, 5vw, 58px);
+      font-weight: normal;
+      margin: 15px 0;
+      color: white;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: 0 auto;
+      font-size: 16px;
+      color: #E2EDE5;
+    }
+
+    /* NAVIGATION */
+
+    .navigation {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 25px;
+      background: white;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navigation a {
+      text-decoration: none;
+      color: var(--dark-green);
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .navigation a:hover {
+      color: var(--accent);
+    }
+
+    /* MAIN LAYOUT */
+
+    .container {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 45px 30px 80px;
+    }
+
+    .chapter {
+      margin-bottom: 80px;
+      scroll-margin-top: 25px;
+    }
+
+    .chapter-header {
+      margin-bottom: 30px;
+      max-width: 850px;
+    }
+
+    .chapter-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: bold;
+      color: #678574;
+      margin-bottom: 8px;
+    }
+
+    .chapter-header h2 {
+      font-family: Georgia, serif;
+      color: var(--dark-green);
+      font-size: clamp(27px, 3vw, 36px);
+      font-weight: normal;
+      margin: 0 0 10px;
+    }
+
+    .chapter-header p {
+      color: var(--muted);
+      font-size: 15px;
+      margin: 0;
+    }
+
+    /* CHART GRID */
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+.chart-card {
+  background: #FFFFFF;
+  border: 1px solid #DDE7DE;
+  border-radius: 12px;
+  padding: 30px;
+  width: 100%;
+  box-shadow: 0 4px 18px rgba(32, 65, 47, 0.04);
+}
+
+.chart-container {
+  width: 100%;
+  overflow-x: auto;
+  text-align: center;
+}
+
+    .chart-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 26px;
+      min-width: 0;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(32, 65, 47, 0.04);
+    }
+
+    .chart-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .chart-number {
+      color: #7B9585;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .chart-card h3 {
+      font-family: Georgia, serif;
+      color: var(--dark-green);
+      font-size: 21px;
+      font-weight: normal;
+      line-height: 1.35;
+      margin: 0 0 12px;
+    }
+
+    .chart-description {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0 0 22px;
+    }
+
+    .chart-container {
+      width: 100%;
+      min-height: 180px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      text-align: center;
+    }
+
+    .chart-container .vega-embed {
+      max-width: 100%;
+    }
+
+    /* CHART ANNOTATIONS */
+
+    .annotation {
+      background: #F3F7F2;
+      border-left: 3px solid #8BAE97;
+      padding: 13px 16px;
+      border-radius: 0 6px 6px 0;
+      margin: 20px 0 0;
+      font-size: 13px;
+      color: #526B5E;
+      line-height: 1.6;
+    }
+
+    .annotation strong {
+      color: var(--dark-green);
+    }
+
+    /* STORY TRANSITIONS */
+
+    .story-note {
+      background: #DFEADF;
+      padding: 24px 30px;
+      border-radius: 10px;
+      margin-top: 30px;
+      font-size: 14px;
+      color: #355648;
+    }
+
+    /* FOOTER */
+
+    footer {
+      background: var(--dark-green);
+      color: #E1EBE4;
+      padding: 40px 25px;
+      text-align: center;
+    }
+
+    footer h2 {
+      font-family: Georgia, serif;
+      color: white;
+      font-weight: normal;
+      margin-top: 0;
+    }
+
+    footer p {
+      max-width: 700px;
+      margin: 10px auto;
+      font-size: 13px;
+    }
+
+    /* RESPONSIVE DESIGN */
+
+    @media (max-width: 1100px) {
+      .chart-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-card.full-width {
+        grid-column: auto;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .hero {
+        padding: 55px 20px;
+      }
+
+      .container {
+        padding: 30px 15px 60px;
+      }
+
+      .chart-card {
+        padding: 18px;
+      }
+
+      .navigation {
+        gap: 15px;
+      }
+    }
+
+/* Sources section text colour */
+
+.about-footer ul li a {
+  color: #F3C9A9;
+  text-decoration: underline;
+}
+
+.about-footer ul li a:hover {
+  color: #FFFFFF;
+}
+
   </style>
-  
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Australia's Migratory Shorebirds</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 </head>
 
 <body>
-    <h1>Wing's Across Australia</h1>
-    <p>Exploring Shorebirds, Migration and the Wetland they depend on
-    </p>
 
-    <h2>Chart 1: Meet Australia's Shorebirds</h2>
-    <div id="chart1"></div>
+  <!-- DASHBOARD HEADER -->
 
-    <h2>Chart 2: Shorebird Records by Season</h2>
-    <div id="chart2"></div>
+  <header class="hero">
+    <div class="hero-label">
+      Australian Shorebirds | Data Visualisation
+    </div>
 
-    <h2>Chart 3: Shorebird Species by Season</h2>
-    <div id="chart3"></div>
-
-    <h2>Chart 4: Shorebird Records Over Time</h2>
-    <div id="chart4"></div>
-
-
-    <h2>Chart 5: Exploring Australia's Key Shorebird Habitats</h2>
-    <div id="chart5"></div>
-
-    <h2>Chart 6: The Wetlands Behind Australia's Shorebird Habitats</h2>
-    <p>Wetlands are vital places for shorebirds to feed and rest. 
-    Some are recognised as Ramsar sites, but where are most of them found in Australia?
-    </p>
-    <div id="chart6"></div>
-
-    <h2>Chart 7: Mapping Australia's Important Wetlands</h2>
+    <h1>Wings Across Australia</h1>
 
     <p>
-        We've seen which states have the most Ramsar sites. 
-        Now, let's explore their distribution across Australia on the map!
+      Exploring shorebird sightings, seasonal patterns,
+      and the wetlands that support them.
     </p>
+  </header>
 
-<div id="chart7"></div>
+  <!-- NAVIGATION -->
 
-<h2>Chart 8: Do More Diverse Areas Have Higher Bird Counts?</h2>
-<P>
-    Do areas with more shorebirds also have higher bird counts? 
-    Explore the bubbles and uncover the patterns!
-</P>
-<div id="chart8"></div>
+  <nav class="navigation">
+    <a href="#shorebirds">Shorebird Patterns</a>
+    <a href="#habitats">Shorebird Habitats</a>
+    <a href="#wetlands">Ramsar Wetlands</a>
+  </nav>
 
-<h2>Chart 9: Where Are Australia's Ramsar Wetlands Located?</h2>
+  <main class="container">
 
-<p>
-    Explore the locations of Ramsar Wetlands across Australia.
-</p>
-<div id="chart9"></div>
+    <!-- CHAPTER 1 -->
 
-<p class="annotation">
-    Ramsar wetlands are distributed across Australia, with many
-    sites located near coastal regions. Each dot represents one Ramsar site.
-  </p>
+    <section class="chapter" id="shorebirds">
 
-  <h2>Chart 10: Where Are Ramsar Wetlands Most Concentrated?</h2>
+      <div class="chapter-header">
+        <div class="chapter-label">Chapter 01</div>
 
-  <p>
-    Explore which geographic regions contain the highest concentrations
-    of Ramsar wetlands.
-  </p>
+        <h2>Discover Australia's Shorebirds</h2>
+
+        <p>
+          Australia provides important habitats for many shorebird
+          species. Explore which species appear most frequently
+          in the records and how observations vary across
+          seasons and years.
+        </p>
+      </div>
+
+      <div class="chart-grid">
+
+        <article class="chart-card">
+          <div class="chart-number">Visualisation 01</div>
+          <h3>Meet Australia's Shorebirds</h3>
+          <p class="chart-description">
+            Discover the most frequently listed shorebird species.
+          </p>
+          <div class="chart-container" id="chart1"></div>
+
+          <p class="annotation">
+            <strong>Key observation:</strong>
+            The Sharp-tailed Sandpiper is the most frequently
+            listed species, appearing in 141 records.
+            This reflects its frequency in the dataset,
+            rather than its total population in Australia.
+          </p>
   
-  <div id="chart10"></div>
-  
-  <p class="annotation">
-    Darker orange areas indicate locations where multiple
-    Ramsar sites occur close together. The overlapping circles
-    highlight regional concentrations rather than individual sites.
-  </p>
+        </article>
 
-    <script src="vega_lite_vis.js"></script>
+        <article class="chart-card">
+          <div class="chart-number">Visualisation 02</div>
+          <h3>Shorebird Records by Season</h3>
+          <p class="chart-description">
+            Compare the number of records in summer and winter.
+          </p>
+          <div class="chart-container" id="chart2"></div>
+
+          <p class="annotation">
+            <strong>Key observation:</strong>
+            Summer accounts for the majority of shorebird
+            records, with 1,269 observations. This suggests
+            that more records were collected during summer
+            than winter in this dataset.
+          </p>
+  
+        </article>
+
+        <article class="chart-card">
+          <div class="chart-number">Visualisation 03</div>
+          <h3>Shorebird Species by Season</h3>
+          <p class="chart-description">
+            Explore how species records differ between seasons.
+          </p>
+          <div class="chart-container" id="chart3"></div>
+
+
+         <p class="annotation">
+            <strong>Key observation:</strong>
+            Most of the displayed shorebird species have more
+            records in summer. However, the Double-banded
+            Plover shows the opposite pattern, with more
+            records during winter.
+         </p>
+  
+        </article>
+
+        <article class="chart-card">
+          <div class="chart-number">Visualisation 04</div>
+          <h3>Shorebird Records Over Time</h3>
+          <p class="chart-description">
+            Examine changes in recorded shorebird observations
+            across the available years.
+          </p>
+          <div class="chart-container" id="chart4"></div>
+
+         <p class="annotation">
+            <strong>Key observation:</strong>
+            Shorebird records fluctuate between 2010 and 2024,
+            with noticeable peaks in 2010 and 2016.
+            Records decline towards 2024, although this does
+            not necessarily indicate a decline in shorebird populations.
+         </p>
+  
+        </article>
+
+      </div>
+
+      <div class="story-note">
+        <strong>From sightings to habitats:</strong>
+        Understanding shorebird records is only part of the
+        story. The next section explores the places where
+        shorebirds gather and how species diversity relates
+        to reported bird counts.
+      </div>
+
+    </section>
+
+    <!-- CHAPTER 2 -->
+
+    <section class="chapter" id="habitats">
+
+      <div class="chapter-header">
+        <div class="chapter-label">Chapter 02</div>
+
+        <h2>Exploring Shorebird Habitats</h2>
+
+        <p>
+          Shorebirds depend on suitable habitats for feeding,
+          resting and gathering. Explore which areas have
+          reported the largest peak counts and whether areas
+          with more recorded species also have higher counts.
+        </p>
+      </div>
+
+      <div class="chart-grid">
+
+        <article class="chart-card full-width">
+          <div class="chart-number">Visualisation 05</div>
+          <h3>Australia's Key Shorebird Gathering Areas</h3>
+          <p class="chart-description">
+            Compare the highest reported peak bird counts
+            across shorebird areas.
+          </p>
+          <div class="chart-container" id="chart5"></div>
+
+         <p class="annotation">
+            <strong>Key observation:</strong>
+            Eighty Mile Beach has the highest reported peak
+            count at 520,000 shorebirds, nearly four times
+            that of Roebuck Bay (135,725).
+            This highlights the importance of major
+            shorebird gathering areas.
+         </p>
+  
+        </article>
+
+        <article class="chart-card full-width">
+          <div class="chart-number">Visualisation 06</div>
+          <h3>Do More Diverse Areas Have Higher Bird Counts?</h3>
+          <p class="chart-description">
+            Explore the relationship between species richness
+            and reported peak counts.
+          </p>
+          <div class="chart-container" id="chart8"></div>
+
+         <p class="annotation">
+            <strong>Key observation:</strong>
+            Areas with more recorded shorebird species generally
+            show higher peak counts, although the relationship
+            varies. One area exceeds 500,000 birds, highlighting
+            an exceptionally large reported gathering.
+         </p>
+  
+        </article>
+
+      </div>
+
+      <div class="story-note">
+        <strong>Why wetlands matter:</strong>
+        Wetlands provide important feeding and resting
+        environments for shorebirds. The final chapter
+        explores Australia's internationally recognised
+        Ramsar wetlands and their geographic distribution.
+      </div>
+
+    </section>
+
+    <!-- CHAPTER 3 -->
+
+    <section class="chapter" id="wetlands">
+
+      <div class="chapter-header">
+        <div class="chapter-label">Chapter 03</div>
+
+        <h2>Australia's Important Wetlands</h2>
+
+        <p>
+          Ramsar wetlands are internationally recognised
+          for their ecological importance. Explore how
+          these sites are distributed across Australian
+          states and territories, where individual sites
+          are located, and which regions show greater
+          geographic concentration.
+        </p>
+      </div>
+
+      <div class="chart-grid">
+
+        <article class="chart-card full-width">
+          <div class="chart-number">Visualisation 07</div>
+          <h3>Ramsar Wetlands by State</h3>
+          <p class="chart-description">
+            Compare the number of Ramsar sites across
+            Australian states and territories.
+          </p>
+          <div class="chart-container" id="chart6"></div>
+
+         <p class="annotation">
+            <strong>Key observation:</strong>
+            New South Wales has the highest number of Ramsar
+            wetlands with 13 sites, followed closely by Victoria
+            and Western Australia with 12 each.
+            This shows that internationally recognised wetlands
+            are distributed across several Australian regions.
+         </p>
+  
+        </article>
+
+        <article class="chart-card full-width">
+          <div class="chart-number">Visualisation 08</div>
+          <h3>Mapping Australia's Important Wetlands</h3>
+          <p class="chart-description">
+            Explore the state-level distribution of
+            Ramsar wetland sites across Australia.
+          </p>
+          <div class="chart-container" id="chart7"></div>
+
+         <p class="annotation">
+            <strong>Key observation:</strong>
+            New South Wales has the highest number of Ramsar sites
+            (13), followed by Victoria and Western Australia (12 each).
+            Darker green regions represent states with more
+            internationally recognised wetlands.
+         </p>
+  
+        </article>
+
+        <article class="chart-card full-width">
+          <div class="chart-number">Visualisation 09</div>
+          <h3>Where Are Australia's Ramsar Wetlands Located?</h3>
+          <p class="chart-description">
+            Hover over the map markers to discover
+            individual Ramsar wetland locations.
+          </p>
+
+          <div class="chart-container" id="chart9"></div>
+
+          <p class="annotation">
+            <strong>Key observation:</strong>
+            Ramsar wetlands are distributed across Australia,
+            with many sites located near coastal regions.
+            Each dot represents one Ramsar site.
+          </p>
+        </article>
+
+        <article class="chart-card full-width">
+          <div class="chart-number">Visualisation 10</div>
+          <h3>Where Are Ramsar Wetlands Most Concentrated?</h3>
+          <p class="chart-description">
+            Explore how Ramsar wetland sites are distributed
+            across Australia using geographic grid cells.
+            Darker blue cells represent higher site counts.
+          </p>
+
+          <div class="chart-container" id="chart10"></div>
+
+          <p class="annotation">
+            <strong>Key observation:</strong>
+            Ramsar sites appear more concentrated in parts of
+            southeastern Australia. Darker blue cells represent
+            more sites within each 3-degree geographic grid cell.
+            These cells show geographic groupings, not the
+            boundaries of individual wetlands.
+          </p>
+        </article>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  
+<footer class="about-footer">
+
+    <h2>About This Page</h2>
+  
+    <p>
+      <strong>Author:</strong>
+      Maryam Latisya Ahmad Zuraimi,
+      FIT3179 Data Visualisation 2,
+      Monash University, 27 October 2026.
+    </p>
+  
+    <p>
+      <strong>Use of AI:</strong>
+      Generative AI (ChatGPT, OpenAI) was used to assist
+      with improving the page layout, styling, and grammar.
+    </p>
+  
+    <p><strong>Sources:</strong></p>
+  
+    <ul>
+      <li>
+        <a href="https://birdata.birdlife.org.au/explore#map=-22.5083100_136.0786120_4"
+           target="_blank" rel="noopener noreferrer">
+          BirdLife Australia – Birdata
+        </a>
+      </li>
+  
+      <li>
+        <a href="https://digital.atlas.gov.au/datasets/ramsar-wetlands/about"
+           target="_blank" rel="noopener noreferrer">
+          Digital Atlas of Australia – Ramsar Wetlands
+        </a>
+      </li>
+  
+      <li>
+        <a href="https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs/edition-4-july-2026-june-2031/access-and-downloads/digital-boundary-files"
+           target="_blank" rel="noopener noreferrer">
+          Australian Bureau of Statistics – Digital Boundary Files
+        </a>
+      </li>
+    </ul>
+  
+  </footer>
+  
+  <script src="vega_lite_vis.js"></script>
+  
+  </body>
+  </html>
+
+  <script src="vega_lite_vis.js"></script>
+
 </body>
 </html>
