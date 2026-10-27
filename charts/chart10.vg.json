@@ -1,0 +1,106 @@
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Where Are Ramsar Wetlands Most Concentrated?",
+    "subtitle": "Explore geographic concentrations of Ramsar sites across Australia.",
+    "font": "Georgia",
+    "fontSize": 18,
+    "subtitleFont": "Arial",
+    "subtitleFontSize": 12,
+    "subtitleColor": "#666666",
+    "anchor": "start"
+  },
+  "width": 550,
+  "height": 420,
+  "projection": {
+    "type": "mercator",
+    "center": [134, -25],
+    "scale": 450,
+    "translate": [275, 210]
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "../data/australia_states.geojson",
+        "format": {
+          "type": "json",
+          "property": "features"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "#E7EFE7",
+        "stroke": "#829B8A",
+        "strokeWidth": 0.8
+      }
+    },
+    {
+      "data": {
+        "url": "../data/ramsar_site_points.csv"
+      },
+      "transform": [
+        {
+          "calculate": "toNumber(datum.Latitude)",
+          "as": "Lat"
+        },
+        {
+          "calculate": "toNumber(datum.Longitude)",
+          "as": "Lon"
+        },
+        {
+          "filter": "isValid(datum.Lat) && isValid(datum.Lon) && datum.Lat >= -45 && datum.Lat <= -9 && datum.Lon >= 112 && datum.Lon <= 155"
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "size": 5500,
+        "color": "#E76F2E",
+        "opacity": 0.10,
+        "stroke": null
+      },
+      "encoding": {
+        "longitude": {
+          "field": "Lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "Lat",
+          "type": "quantitative"
+        },
+        "tooltip": [
+          {
+            "field": "RAMSAR_NAME",
+            "type": "nominal",
+            "title": "Ramsar Site"
+          },
+          {
+            "field": "STATE",
+            "type": "nominal",
+            "title": "State"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "../data/australia_states.geojson",
+        "format": {
+          "type": "json",
+          "property": "features"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "filled": false,
+        "stroke": "#829B8A",
+        "strokeWidth": 0.9
+      }
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

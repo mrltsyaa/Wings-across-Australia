@@ -39,4 +39,16 @@ vegaEmbed("#chart7", vg_7)
 
 var vg_8 = "charts/chart8.vg.json";
     vegaEmbed("#chart8", vg_8).catch(console.error);
+
+var vg_9 = "charts/chart9.vg.json";
+
+vegaEmbed("#chart9", vg_9)
+    .then(function(result){
+        console.log("Chart 9 loaded successfully");
+    })
+    .catch(console.error)
     
+    var vg_10 = "charts/chart10.vg.json";
+
+vegaEmbed("#chart10", vg_10)
+    .catch(console.error);

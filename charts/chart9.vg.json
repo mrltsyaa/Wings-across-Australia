@@ -1,0 +1,100 @@
+
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": {
+      "text": "Where Are Australia's Ramsar Wetlands Located?",
+      "subtitle": "Each orange dot represents a Ramsar site. Hover to explore.",
+      "font": "Georgia",
+      "fontSize": 18,
+      "subtitleFont": "Arial",
+      "subtitleFontSize": 12,
+      "subtitleColor": "#666666",
+      "anchor": "start"
+    },
+    "width": 550,
+    "height": 420,
+    "projection": {
+      "type": "mercator",
+      "center": [134, -25],
+      "scale": 450,
+      "translate": [275, 210]
+    },
+    "layer": [
+      {
+        "data": {
+          "url": "../data/australia_states.geojson",
+          "format": {
+            "type": "json",
+            "property": "features"
+          }
+        },
+        "mark": {
+          "type": "geoshape",
+          "fill": "#E7EFE7",
+          "stroke": "#829B8A",
+          "strokeWidth": 0.8
+        }
+      },
+      {
+        "data": {
+          "url": "../data/ramsar_site_points.csv"
+        },
+        "transform": [
+          {
+            "filter": "isValid(datum.Latitude) && isValid(datum.Longitude)"
+          },
+          {
+            "filter": "datum.Latitude >= -45 && datum.Latitude <= -9 && datum.Longitude >= 112 && datum.Longitude <= 155"
+          }
+        ],
+        "mark": {
+          "type": "circle",
+          "color": "#C46D45",
+          "size": 100,
+          "opacity": 0.85,
+          "stroke": "#FFFFFF",
+          "strokeWidth": 0.8
+        },
+        "encoding": {
+          "longitude": {
+            "field": "Longitude",
+            "type": "quantitative"
+          },
+          "latitude": {
+            "field": "Latitude",
+            "type": "quantitative"
+          },
+          "tooltip": [
+            {
+              "field": "RAMSAR_NAME",
+              "type": "nominal",
+              "title": "Ramsar Site"
+            },
+            {
+              "field": "STATE",
+              "type": "nominal",
+              "title": "State/Territory"
+            },
+            {
+              "field": "Latitude",
+              "type": "quantitative",
+              "title": "Latitude",
+              "format": ".2f"
+            },
+            {
+              "field": "Longitude",
+              "type": "quantitative",
+              "title": "Longitude",
+              "format": ".2f"
+            }
+          ]
+        }
+      }
+    ],
+    "config": {
+      "view": {
+        "stroke": null
+      }
+    }
+  }
+  
